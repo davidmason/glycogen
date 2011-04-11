@@ -1,0 +1,37 @@
+﻿
+GLYCOGEN for Sugar
+==================
+
+NOTE: This is a project for university credit, but development will continue
+      beyond university submission (which will be no later than July, 2011).
+      
+      I'm currently in the early stages of this project, so don't expect
+      to see anything very complete or well defined until closer to submission
+      time.
+
+
+What is glycogen?
+-----------------
+
+Glycogen aims to add an extra interface screen to the Sugar desktop environment
+(see http://www.sugarlabs.org) which will allow activities to be combined into
+learning pathways.
+
+In addition, an API will be defined that activity developers can implement to
+allow finer-grained interaction with glycogen, so that learning pathways can
+include nodes with specific achievements in addition to the more general
+'do this activity' type nodes.
+
+
+Use with Sugar
+--------------
+
+This project's first aim is to develop a proof-of-concept custom release in the
+form of a customised 'sugar on a stick' that exists separately to the sugar
+project. This is mainly to fit into the time constraints of a university semester
+by bypassing (for now) the standard process for becoming involved officially as
+a contributor to the project.
+
+A later aim is to have the glycogen project incorporated into sugar's trunk and
+to be developed concurrently with sugar (rather than just working with a
+snapshot of sugar as the initial release will do).
