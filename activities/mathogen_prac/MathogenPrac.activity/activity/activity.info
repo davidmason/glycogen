@@ -1,0 +1,9 @@
+[Activity]
+name = Mathogen Practice
+activity_version = 1
+license = GPLv2+ and BSD
+host_version = 1
+icon = activity-mathogen
+show_launcher = yes
+bundle_id = org.davidmason.mathogen_prac
+class = mathogen_prac.MathogenPrac
