@@ -6,4 +6,5 @@ host_version = 1
 icon = activity-mathogen
 show_launcher = yes
 bundle_id = org.davidmason.mathogen_prac
-class = mathogen_prac.MathogenPrac
+class = mathogen_prac.MathogenPracGui
+
