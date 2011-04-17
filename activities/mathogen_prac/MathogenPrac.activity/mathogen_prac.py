@@ -24,18 +24,34 @@ class MathogenPracGui(activity.Activity):
             font.set_weight(weight)
         widget.modify_font(font)
     
+    def setOperator(self, widget, data):
+        
+        if (widget.get_active()):
+            if (not data in self.operators):
+                self.operators.append(data)
+        else:
+            if (data in self.operators):
+                self.operators.remove(data)
+            
+        mylist.append("thing")
+        "thing" in mylist
+        mylist.remove("thing")
+        
     def tryAnswer(self, widget, data=None):
         userInput = self.answer.get_text()
         
         if (len(userInput) == 0):
             self.hintmessage.set_text("You didn't enter an answer yet")
+            return
         if (not is_int(userInput)):
             self.hintmessage.set_text("Your input doesn't look like a number")
+            return
         if (self._practice.tryAnswer(int(userInput))):
             self.hintmessage.set_text("That's right!")
             # also get a new problem
             #TODO need to get the operator from the buttons
-            self.showProblem(self._practice.newProblem('+'))
+            self.showProblem(self._practice.newProblem(random.choice(self.operators))) # replaced '+' with random.choice(self.operators)
+            self.showProgress(self._practice)
         else:
             self.hintmessage.set_text("So close! Try again.")
             self.answer.grab_focus()
@@ -48,7 +64,12 @@ class MathogenPracGui(activity.Activity):
         #TODO this code could possibly be more readable by separating it into functions
         
         operator_button_text_scale = 4
+        hintmessage_text_scale = 5
+        progress_text_scale = 5
         challenge_text_scale = 7
+        challenge_button_text_scale = 5
+        
+        self.messages = {0.0: "Just starting", 0.25: "Good work", 0.5: "Half way!", 0.75: "Nearly done!", 1.0: "You win!"}
         
         # Creates the Toolbox. It contains the Activity Toolbar, which is the
         # bar that appears on every Sugar window and contains essential
@@ -66,17 +87,18 @@ class MathogenPracGui(activity.Activity):
         self.topbar = gtk.HBox(False, 0)
         
         # create contents for topbar
-        self.button_add = gtk.Button("+")
-        self.button_subtract = gtk.Button("-")
-        self.button_multiply = gtk.Button("x")
-        self.button_divide = gtk.Button("/") #TODO try to add a division sign
+        self.button_add = gtk.ToggleButton("+")
+        self.button_subtract = gtk.ToggleButton("-")
+        self.button_multiply = gtk.ToggleButton("x")
+        self.button_divide = gtk.ToggleButton("/") #TODO try to add a division sign
         self.hintmessage = gtk.Label("this label will say how close your answer is (e.g. 'so close!')")
         
         # increase font size
-        self._setFontParams(self.button_add, scale=operator_button_text_scale)
-        self._setFontParams(self.button_subtract, scale=operator_button_text_scale)
-        self._setFontParams(self.button_multiply, scale=operator_button_text_scale)
-        self._setFontParams(self.button_divide, scale=operator_button_text_scale)
+        self._setFontParams(self.button_add.get_child(), scale=operator_button_text_scale)
+        self._setFontParams(self.button_subtract.get_child(), scale=operator_button_text_scale)
+        self._setFontParams(self.button_multiply.get_child(), scale=operator_button_text_scale)
+        self._setFontParams(self.button_divide.get_child(), scale=operator_button_text_scale)
+        self._setFontParams(self.hintmessage, scale=hintmessage_text_scale)
         
         # pack contents into topbar
         self.topbar.pack_start(self.button_add, False, False, 5)
@@ -105,13 +127,17 @@ class MathogenPracGui(activity.Activity):
         self._setFontParams(self.label_num2, scale=challenge_text_scale)
         self._setFontParams(self.label_equals, scale=challenge_text_scale)
         self._setFontParams(self.answer, scale=challenge_text_scale)
-        self._setFontParams(self.button_go, scale=challenge_text_scale)
+        self._setFontParams(self.button_go.get_child(), scale=challenge_button_text_scale)
         
         self.challenge.attach(self.label_num1, 0, 1, 0, 1)
         self.challenge.attach(self.label_operator, 1, 2, 0, 1)
         self.challenge.attach(self.label_num2, 2, 3, 0, 1)
         self.challenge.attach(self.label_equals, 3, 4, 0, 1)
         self.challenge.attach(self.answer, 4, 5, 0, 1)
+        
+        # go button is in a container to provide some padding
+        # go_button_container = gtk.Container()
+        # go_button_container.
         self.challenge.attach(self.button_go, 5, 6, 0, 1)
         
         # bottom row is for the clue (hidden by default)
@@ -127,7 +153,7 @@ class MathogenPracGui(activity.Activity):
         self._setFontParams(self.label_num2_clue, scale=challenge_text_scale)
         self._setFontParams(self.label_equals_clue, scale=challenge_text_scale)
         self._setFontParams(self.label_answer_clue, scale=challenge_text_scale)
-        self._setFontParams(self.button_clue, scale=challenge_text_scale)
+        self._setFontParams(self.button_clue.get_child(), scale=challenge_button_text_scale)
         
         self.challenge.attach(self.label_num1_clue, 0, 1, 1, 2)
         self.challenge.attach(self.label_operator_clue, 1, 2, 1, 2)
@@ -145,8 +171,9 @@ class MathogenPracGui(activity.Activity):
         # student's icon and move it towards a representation of a goal (possibly
         # a cupcake or something sugary or glycogeny)
         self.progress = gtk.ProgressBar()
-        self.progress.set_text("Level 0")
-        self.progress.set_fraction(0.5)
+        self.progress.set_text("Just starting")
+        self.progress.set_fraction(0.0)
+        self._setFontParams(self.progress, scale=progress_text_scale)
         
         self.racetrack.pack_start(self.progress, True, True, 0)
         
@@ -163,6 +190,10 @@ class MathogenPracGui(activity.Activity):
         self.button_divide.show()
         self.hintmessage.show()
         self.topbar.show()
+        
+        # set button sizes in challenge
+        self.button_go.set_size_request(10, 10)
+        self.button_clue.set_size_request(50, 50)
         
         # show all of challenge
         self.label_num1.show()
@@ -188,14 +219,27 @@ class MathogenPracGui(activity.Activity):
         #show everything
         self.layout.show()
         
+        # start with just the 'add' operation selected
+        self.operators = ["+"]
+        self.button_add.set_active(True)
+        self.button_subtract.set_active(False)
+        self.button_multiply.set_active(False)
+        self.button_divide.set_active(False)
+        
         
         self.button_go.connect("clicked", self.tryAnswer, None)
         self.answer.connect("activate", self.tryAnswer, None)
         
-        # create a new MathogenPrac() to keep track of number of questions answered
-        self._practice = MathogenPrac() #this should already have the first (addition) question answered
+        # connect operator buttons
+        self.button_add.connect("toggled", self.setOperator, "+")
+        self.button_subtract.connect("toggled", self.setOperator, "-")
+        self.button_multiply.connect("toggled", self.setOperator, "*")
+        self.button_divide.connect("toggled", self.setOperator, "/")
         
+        # create a new MathogenPrac() to keep track of number of questions answered
+        self._practice = MathogenPrac() #this should already have the first (addition) question generated
         self.showProblem(self._practice.currentProblem)
+    
         
     def showProblem(self, prob):
         self.label_num1.set_text(str(prob.operand1))
@@ -204,11 +248,29 @@ class MathogenPracGui(activity.Activity):
         self.answer.set_text("")
         self.answer.grab_focus()
         self.hintmessage.set_text("Try this one...")
+    
+    def showProgress(self, prac):
+        fraction = prac.getProgress()
+        self.progress.set_fraction(fraction)
+        
+        
+        # loop through self.messages until we get the right one
+        
+        
+        keys = self.messages.keys()
+        keys.sort()
+        for key in keys:
+            if (fraction >= key):
+                message_key = key
+            else:
+                break
+        
+        self.progress.set_text(self.messages[message_key])
         
 
 class MathogenPrac():
     
-    def __init__(self):
+    def __init__(self, howMany=15):
         # initialise the counts for correct and incorrect for each operator
         # let's store them in maps for fun, then we can reuse the methods
         # that look them up and compare ratios
@@ -216,8 +278,13 @@ class MathogenPrac():
         # number of correct and incorrect answers:
         self.__correct = { '+': 0, '-': 0, '*': 0, '/': 0}
         self.__incorrect = { '+': 0, '-': 0, '*': 0, '/': 0}
+        self._target = howMany
         self.newProblem('+') #starts with a default addition problem
-
+    
+    def getProgress(self):
+        correct = sum([i for i in self.__correct.values()])
+        return float(correct) / float(self._target)
+    
     def newProblem(self, operator):
         """Generates a new maths problem.
         
@@ -267,8 +334,8 @@ class SimpleMathProblem():
     def _initProduct(self, limit):
         # set this problem up as a product
         self.operator = '*'
-        self.operand1 = random.randint(0, limit/2)
-        self.operand2 = random.randint(0, limit/self._operand1)
+        self.operand1 = random.randint(1, limit/2)
+        self.operand2 = random.randint(0, limit/self.operand1)
         self.answer = self.operand1 * self.operand2
     
     def _initQuotient(self, limit):
@@ -277,7 +344,7 @@ class SimpleMathProblem():
         
         # this is the most complicated, since I want whole numbers
         # first we need to generate a non-prime (so it can be divided)
-        nonPrimes = _getNonPrimes(limit)
+        nonPrimes = self._getNonPrimes(limit)
         if (len(nonPrimes) == 0):
             nonPrimes.append(limit) # here we just use limit if there are no primes
         # select a random 'non-prime' from the list
@@ -287,7 +354,7 @@ class SimpleMathProblem():
         factors = filter(lambda x: self.operand1 % x == 0 , range(1, self.operand1))
         self.operand2 = random.choice(factors)
         
-        self.answer = self._operand1 / self._operand2
+        self.answer = self.operand1 / self.operand2
     
 #    def _notPrime(num): return !all(num % i for i in xrange(2, num))
     
