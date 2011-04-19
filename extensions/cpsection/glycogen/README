@@ -1,0 +1,20 @@
+Glycogen as an extension
+========================
+
+This represents an early attempt at implementing the glycogen
+user interface as an extra view in the home window (the default
+views are Favorites View and List View).
+
+It is essentially a hack, dynamically replacing methods in gui
+classes while they are running in order to achieve the desired
+effect.
+One advantage of this is that source code changes are kept
+in a single location, the disadvantage is that it is a very
+unstable solution, so is definitely not permanent.
+
+I have chosen this approach because it allows me to develop
+the necessary methods and classes in a way that is easy to
+keep track of, and in a way that is unlikely to do any major
+damage to the main source code, so that I don't end up spending
+all my time debugging the whole sugar interface when I'm only
+interested in one part of it.
