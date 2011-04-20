@@ -18,8 +18,49 @@
 #from gettext import gettext as _
 #import gconf
 
-def test_get_string():
-    return "test string"
+
+# replacement for jarabe/desktop/homebox.py 112 _set_view(self, view):
+_FAVORITES_VIEW = 0
+_LIST_VIEW = 1
+_PATHWAY_VIEW = 2 # glycogen's view
+
+def new_homebox_set_view(self, view):
+    if view == _FAVORITES_VIEW:
+        if self._list_view in self.get_children():
+            self.remove(self._list_view)
+        if self._pathway_view in self.get_children():
+            self.remove(self._pathway_view)
+
+        if self._favorites_view not in self.get_children():
+            self.add(self._favorites_view)
+            self._favorites_view.show()
+            
+    elif view == _LIST_VIEW:
+        if self._favorites_view in self.get_children():
+            self.remove(self._favorites_view)
+        if self._pathway_view in self.get_children():
+            self.remove(self._pathway_view)
+        
+        if self._list_view not in self.get_children():
+            self.add(self._list_view)
+            self._list_view.show()
+            
+    elif view == _PATHWAY_VIEW:
+        if self._favorites_view in self.get_children():
+            self.remove(self._favorites_view)
+        if self._list_view in self.get_children():
+            self.remove(self._list_view)
+            
+        if self._pathway_view not in self.get_children():
+            self.add(self._pathway_view)
+            self._pathway_view.show()
+
+    else:
+        raise ValueError('Invalid view: %r' % view)
+
+
+
+
 
 
 # keeping as gconf examples
