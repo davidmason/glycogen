@@ -18,3 +18,8 @@ keep track of, and in a way that is unlikely to do any major
 damage to the main source code, so that I don't end up spending
 all my time debugging the whole sugar interface when I'm only
 interested in one part of it.
+
+Installation
+------------
+Copy cpsection/glycogen to the same path under the sugar extensions
+directory and restart sugar.

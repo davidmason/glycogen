@@ -32,20 +32,6 @@ from jarabe.desktop import homebox
 from jarabe.desktop import homewindow
 from jarabe.desktop.activitieslist import ActivitiesList
 
-# DEPRECATED: function to be attached as view_glycogen in the home box
-#def view_glycogen_function(self):
-#    logging.debug('GLYCOGEN: in view glycogen function')
-#    if self._favorites_view in self.get_children():
-#        self.remove(self._favorites_view)
-#        
-#    if self._list_view in self.get_children():
-#        self.remove(self._list_view)
-#        
-#    if self._glycogen_view not in self.get_children():
-#        self.add(self._glycogen_view)
-#        self._glycogen_view.show()
-#        
-#    logging.debug('GLYCOGEN: end of view glycogen function')
 
 class GlycogenLauncher(SectionView):
     

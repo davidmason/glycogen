@@ -35,3 +35,14 @@ A later aim is to have the glycogen project incorporated into sugar's trunk and
 to be developed concurrently with sugar (rather than just working with a
 snapshot of sugar as the initial release will do).
 
+Installation
+------------
+
+To install glycogen in a copy of sugar, follow the installation instructions in 
+the README files in both extensions/ and site-packages/ (you have to drill down
+a few levels to find them).
+Glycogen can then be activated by logging in to sugar, opening "My Settings",
+clicking 'glycogen' and pressing the 'activate glycogen' button. This should add
+an extra view button to the home view, which will show the glycogen page.
+
+The activities work independently of glycogen so can be installed separately.
