@@ -6,6 +6,11 @@ from time import sleep
 
 
 class MathogenPrac():
+    """A mathogen practice game, which generates simple mathematics problems
+    and keeps track of answers and progress towards a goal number of correct
+    answers.
+
+    """
     
     def __init__(self, howMany=15):
         # initialise the counts for correct and incorrect for each operator
@@ -19,8 +24,13 @@ class MathogenPrac():
         self.new_problem('+') #starts with a default addition problem
     
     def get_progress(self):
+        """Returns a float representing the proportion of the target number
+        of answers that have been answered correctly.
+        """
+
         correct = sum([i for i in self._correct.values()])
         return float(correct) / float(self._target)
+
     
     def new_problem(self, operator):
         """Generates a new maths problem.
@@ -28,12 +38,18 @@ class MathogenPrac():
         Opeartor can be one of '+', '-', '*', '/'
         The numbers, operator and answer can then be retrieved
         from the problem, which is retrieved using getProblem().
+
         """
         
         self.currentProblem = SimpleMathProblem(operator, 20)
         return self.currentProblem
         
     def try_answer(self, answer):
+        """Checks the user's answer to the current problem to see if it is
+        correct, and records the result in the appropriate answer count.
+
+        """
+
         if (answer == self.currentProblem.answer):
             self._correct[self.currentProblem.operator] += 1
             return True

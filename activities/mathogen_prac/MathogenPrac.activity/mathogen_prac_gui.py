@@ -38,6 +38,11 @@ def _set_font_params(widget, scale=None, weight=None):
 
 
 class MathogenPracGui(gtk.VBox):
+    """Handles GUI display for a mathogen practice game, as well as a lot of
+    the control code. Game logic is in mathogen_prac.py
+
+
+    """
     
     def _set_operator(self, widget, data):
         
