@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# must be run as super user
+#TODO check for super-user permission
+
 # echo `basename $0` $ACT_DIR
 
 # directories used by sugar
@@ -27,7 +30,7 @@ EXT_FROM="${HERE}/extensions/cpsection/glycogen"
 # decide which components to update
 # TODO set these from command line arguments
 DO_MATH_PRAC=true
-DO_LIB=false
+DO_LIB=true
 DO_EXT=true
 
 # handle backing up of old directories
@@ -40,12 +43,10 @@ if $DO_MATH_PRAC ; then
     if $DO_BACKUP ; then
         # remove old backup and copy a new one there
         rm -r $MATH_PRAC_DIR$BACKUP_LABEL
-        mv -r $MATH_PRAC_DIR $MATH_PRAC_DIR$BACKUP_LABEL
-    else
-        # just remove without backing up
-        rm -r $MATH_PRAC_DIR
+        cp -r $MATH_PRAC_DIR $MATH_PRAC_DIR$BACKUP_LABEL
     fi
-    # deploy the source version to the working environment
+    # remove old copy and deploy the source version to the working environment
+    rm -r $MATH_PRAC_DIR
     cp -r $MATH_PRAC_FROM $MATH_PRAC_DIR
 fi
 
@@ -53,12 +54,10 @@ if $DO_LIB ; then
     if $DO_BACKUP ; then
         # remove old backup and copy a new one there
         rm -r $LIB_DIR$BACKUP_LABEL
-        mv -r $LIB_DIR $LIB_DIR$BACKUP_LABEL
-    else
-        # just remove without backing up
-        rm -r $LIB_DIR
+        cp -r $LIB_DIR $LIB_DIR$BACKUP_LABEL
     fi
-    # deploy the source version to the working environment
+    # remove old copy and deploy the source version to the working environment
+    rm -r $LIB_DIR
     cp -r $LIB_FROM $LIB_DIR
 fi
 
@@ -66,12 +65,10 @@ if $DO_EXT ; then
     if $DO_BACKUP ; then
         # remove old backup and copy a new one there
         rm -r $EXT_DIR$BACKUP_LABEL
-        mv -r $EXT_DIR $EXT_DIR$BACKUP_LABEL
-    else
-        # just remove without backing up
-        rm -r $EXT_DIR
+        cp -r $EXT_DIR $EXT_DIR$BACKUP_LABEL
     fi
-    # deploy the source version to the working environment
+    # remove old copy and deploy the source version to the working environment
+    rm -r $EXT_DIR
     cp -r $EXT_FROM $EXT_DIR
 fi
 
