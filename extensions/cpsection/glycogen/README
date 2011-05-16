@@ -21,5 +21,5 @@ interested in one part of it.
 
 Installation
 ------------
-Copy cpsection/glycogen to the same path under the sugar extensions
-directory and restart sugar.
+Run the install script with the -e flag, and the -l flag to install
+library dependencies.

@@ -30,7 +30,8 @@ from jarabe.controlpanel.inlinealert import InlineAlert
 
 from jarabe.desktop import homebox
 from jarabe.desktop import homewindow
-from jarabe.desktop.activitieslist import ActivitiesList
+# from jarabe.desktop.activitieslist import ActivitiesList
+from glycogen.desktop.pathwayview import PathwayView
 
 
 class GlycogenLauncher(SectionView):
@@ -48,17 +49,15 @@ class GlycogenLauncher(SectionView):
         self.home_box = home_window.get_home_box()
         logging.debug('GLYCOGEN: got home_box')
         
-        # add the (fake) pathway view to it
-        self.home_box._pathway_view = ActivitiesList()
-        logging.debug('GLYCOGEN: made an ActivitiesList')
+        # add the pathway view to it
+        self.home_box._pathway_view = PathwayView()
+        logging.debug('GLYCOGEN: made a PathwayView')
         
         # add the extra int to the homebox module to refer to the pathway view
-        homebox._PATHWAY_VIEW = self.model._PATHWAY_VIEW # not a typo, I am trying to add it to the module
+        homebox._PATHWAY_VIEW = self.model._PATHWAY_VIEW # not a typo, I am adding it to the module
         
         # replace the default function with an overriden one
         self.home_box._set_view = types.MethodType(self.model.new_homebox_set_view, self.home_box)
-        # the above may be failing because the callback functions are attached to the old version
-        # of this method. In that case I would need to reattach them.
         logging.debug('GLYCOGEN: replaced function _set_view()')
         
         # disable the 'add' button as it shouldn't be needed any more
@@ -67,8 +66,7 @@ class GlycogenLauncher(SectionView):
         # enable the 'show' button since it is meaningful now
 #        self.button_show_pathway_view.set_sensitive(True)
         
-        # try to add a toolbar icon for the pathway view
-        # (uses xo icon for now)
+        # add a toolbar icon for the pathway view
         logging.debug('GLYCOGEN: trying to add pathway button')
         self.add_pathway_button()
         logging.debug('GLYCOGEN: finished adding pathway button')
@@ -78,7 +76,7 @@ class GlycogenLauncher(SectionView):
         toolbar = self.home_box._toolbar
         #add a new button, with a different icon
         
-        toolbar._pathway_button = RadioToolButton(named_icon='sugar-xo')
+        toolbar._pathway_button = RadioToolButton(named_icon='media-playback-start') #TODO this icon fails on soas
         toolbar._pathway_button.props.group = toolbar._list_button
         toolbar._pathway_button.props.tooltip = _('Pathway view')
         toolbar._pathway_button.props.accelerator = _('<Ctrl>3')
@@ -89,8 +87,6 @@ class GlycogenLauncher(SectionView):
 
         toolbar.insert(toolbar._pathway_button, toolbar.get_item_index(toolbar._list_button)+1)
         toolbar._pathway_button.show()
-        
-        #TODO need to hook this up to a toggle function so it will work when pressed
         
         
     
