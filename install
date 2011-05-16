@@ -1,0 +1,110 @@
+#!/bin/bash
+
+USAGE="Usage: `basename $0` [-lep] [-b]"
+ROOT_UID=0
+E_NOTROOT=87
+
+# must be run as super user
+if [ "$UID" -ne "$ROOT_UID" ]
+then
+    echo "Must be root to run this script"
+    exit $E_NOTROOT
+fi
+
+
+# directories used by sugar
+#TODO replace these with environment variables
+ACTIVITY_DIR=/home/sugar/Activities
+LIBRARY_DIR=/usr/lib
+EXTENSION_DIR=/usr/share/sugar/extensions
+
+# generate directories for activities
+MATH_PRAC_DIR="${ACTIVITY_DIR}/MathogenPrac.activity"
+
+# glycogen library and extension directories
+LIB_DIR="${LIBRARY_DIR}/python2.7/site-packages/glycogen"
+EXT_DIR="${EXTENSION_DIR}/cpsection/glycogen"
+
+
+# directories to copy from
+HERE=`pwd`
+ACTIVITY_FROM="${HERE}/activities"
+MATH_PRAC_FROM="${ACTIVITY_FROM}/mathogen_prac/MathogenPrac.activity"
+LIB_FROM="${HERE}/site-packages/glycogen"
+EXT_FROM="${HERE}/extensions/cpsection/glycogen"
+
+
+DO_BACKUP=false
+DO_LIB=false
+DO_EXT=false
+DO_MATH_PRAC=false
+            
+# parse command line options
+while getopts blpe: OPT; do
+    case "$OPT" in
+        b)
+            DO_BACKUP=true
+            ;;
+        l)
+            DO_LIB=true
+            ;;
+        e)
+            DO_EXT=true
+            ;;
+        p)
+            DO_MATH_PRAC=true
+            ;;
+        \?)
+            # invalid parameter passed
+            echo $USAGE >&2
+            exit 1
+            ;;
+    esac
+done
+
+
+# decide which components to update
+# TODO set these from command line arguments
+
+# handle backing up of old directories
+BACKUP_LABEL=".old"
+
+
+function backup {
+    # $1 directory to back up
+    rm -r $1$BACKUP_LABEL      #remove old backup
+    cp -r $1 $1$BACKUP_LABEL
+    echo "[backup] $1 to"
+    echo "[backup] $1$BACKUP_LABEL"
+}
+
+function deploy {
+    # $1 source directory
+    # $2 target directory
+
+    if $DO_BACKUP ; then
+        backup $2
+    fi
+
+    rm -r $2      # remove old version 
+    cp -r $1 $2   # deploy source version to target directory
+    echo "[deploy] from $1"
+    echo "[deploy] to   $2"
+}
+
+
+if $DO_MATH_PRAC ; then
+    deploy $MATH_PRAC_FROM $MATH_PRAC_DIR
+fi
+
+if $DO_LIB ; then
+    deploy $LIB_FROM $LIB_DIR
+fi
+
+if $DO_EXT ; then
+    deploy $EXT_FROM $EXT_DIR
+fi
+
+echo "[finish] success"
+
+exit 0
