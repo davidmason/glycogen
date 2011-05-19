@@ -40,7 +40,10 @@ DO_EXT=false
 DO_MATH_PRAC=false
             
 # parse command line options
-while getopts blpe: OPT; do
+#TODO there is something wrong with these - they sort of work,
+# but often the backup is not done, and there are complaints sometimes
+# about missing an argument
+while getopts blep: OPT; do
     case "$OPT" in
         b)
             DO_BACKUP=true
