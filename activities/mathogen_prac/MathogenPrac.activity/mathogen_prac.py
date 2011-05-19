@@ -4,6 +4,9 @@ import gobject
 import random
 from time import sleep
 
+#TODO move this elsewhere
+from glycogen.challenge import challrepo
+
 
 class MathogenPrac():
     """A mathogen practice game, which generates simple mathematics problems
@@ -49,6 +52,10 @@ class MathogenPrac():
         correct, and records the result in the appropriate answer count.
 
         """
+
+        #TODO remove this to elsewhere (this is test code for starting work on challenge repository)
+        repo = challrepo.get_global_repository()
+        repo.update_achievement("updated achievement from mathogen prac try_answer method")
 
         if (answer == self.currentProblem.answer):
             self._correct[self.currentProblem.operator] += 1

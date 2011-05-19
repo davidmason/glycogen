@@ -6,9 +6,11 @@ from sugar.activity import activity
 
 from mathogen_prac_gui import MathogenPracGui
 
+from glycogen.challenge import challrepo
 
 _CORRECT_ANSWERS_TO_WIN = 15
 
+BUNDLE_ID = 'org.davidmason.mathogen_prac'
 
 class MathogenPracActivity(activity.Activity):
     """This class is used to load mathogen practice as a sugar activity.
@@ -35,3 +37,23 @@ class MathogenPracActivity(activity.Activity):
         # Create the main mathogen practice window
         self.layout = MathogenPracGui(_CORRECT_ANSWERS_TO_WIN)
         self.set_canvas(self.layout)
+
+
+        #TODO update this
+        # This is test code for getting the challenge repository working
+        
+        # create a map of challenges, keys can be any valid dictionary key
+        # as they are only used for dictionary lookup
+        challenges = {'Answer X questions correctly': {'type': 'int'},
+                      'Answer X addition questions correctly': {'type': 'int'}}
+
+        repository = challrepo.get_global_repository()
+        #repository.add_challenge("called add_challenge from MathogenPracActivity constructor")
+        repository.set_challenges(BUNDLE_ID, challenges)
+
+
+
+
+
+
+
