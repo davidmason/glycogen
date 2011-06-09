@@ -4,6 +4,7 @@ import sys, os
 from sugar.activity import activity
 from mathogen_prac_gui import MathogenPracGui
 from glycogen.challenge import challrepo
+from glycogen.challenge.challrepo import Challenge
 
 _CORRECT_ANSWERS_TO_WIN = 15
 
@@ -39,9 +40,14 @@ class MathogenPracActivity(activity.Activity):
         #TODO update this with real challenges
         # create a map of challenges, keys can be any valid dictionary key
         # as they are only used for dictionary lookup
-        challenges = {'Answer X questions correctly': {'type': 'int'},
-                      'Answer X addition questions correctly': {'type': 'int'}}
-
+        #challenges = {'Answer X questions correctly': {'type': 'int'},
+        #              'Answer X addition questions correctly': {'type': 'int'}}
+                      
+        chal1 = Challenge(BUNDLE_ID, 'mathogen1', 'first challenge from mathogen', None)
+        chal2 = Challenge(BUNDLE_ID, 'mathogen2', 'second challenge from mathogen', None)
+        challenges = {chal1.get_id(): chal1,
+                      chal2.get_id(): chal2}
+        
         repository = challrepo.get_global_repository()
         repository.set_challenges(BUNDLE_ID, challenges)
 
