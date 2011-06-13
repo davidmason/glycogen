@@ -92,14 +92,7 @@ class MathogenPracGui(gtk.VBox):
         #TODO this code could possibly be more readable by separating it into functions
         
 
-        
         self.messages = {0.0: "Just starting", 0.25: "Good work", 0.5: "Half way!", 0.75: "Nearly done!", 1.0: "You win!"}
-
-        #this is now done at a higher level, in mathogen_prac_activity.py
-        #self.layout here is now just self (self is now a VBox)
-#        # Create the main layout window that will have 3 sections
-#        self.layout = gtk.VBox(False, 0)
-#        self.set_canvas(self.layout)
         
         # Section 1: topbar
         # holds 4 buttons that change the mode, and a hint message label

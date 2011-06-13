@@ -6,7 +6,27 @@ from time import sleep
 
 #TODO move this elsewhere
 from glycogen.challenge import challrepo
+from glycogen.challenge.challrepo import Challenge, Result
 
+from glycogen.challenge.result import ge_success_func
+
+
+BUNDLE_ID = 'org.davidmason.mathogen_prac'
+
+
+
+challenges = { "add_15": Challenge(BUNDLE_ID, "add_15",
+                                   "Answer 15 addition questions correctly during a session",
+                                   Result(15, ge_success_func)),
+               "subtract_15": Challenge(BUNDLE_ID, "subtract_15",
+                                   "Answer 15 subtraction questions correctly during a session",
+                                   Result(15, ge_success_func)),
+               "multiply_15": Challenge(BUNDLE_ID, "multiply_15",
+                                   "Answer 15 multiplication questions correctly during a session",
+                                   Result(15, ge_success_func)),
+               "divide_15": Challenge(BUNDLE_ID, "divide_15",
+                                   "Answer 15 division questions correctly during a session",
+                                   Result(15, ge_success_func)) }
 
 class MathogenPrac():
     """A mathogen practice game, which generates simple mathematics problems
@@ -25,6 +45,20 @@ class MathogenPrac():
         self.__incorrect = { '+': 0, '-': 0, '*': 0, '/': 0}
         self._target = howMany
         self.new_problem('+') #starts with a default addition problem
+    
+    def check_achievements(self, operator):
+        #see if any achievements are complete
+        #if self._correct[operator] >= 15:
+        challenge_id = challenges.keys()[self._correct.keys().index(operator)]
+        repo = challrepo.get_global_repository()
+        result = repo.get_result(BUNDLE_ID, challenge_id)
+        if result.get_result() is not None:
+            if (result.get_result() >= self._correct[operator]):
+                return  #higher result already recorded
+        
+        result.set_result(self._correct[operator])
+        repo.set_result(BUNDLE_ID, challenge_id, result)
+        
     
     def get_progress(self):
         """Returns a float representing the proportion of the target number
@@ -53,12 +87,9 @@ class MathogenPrac():
 
         """
 
-        #TODO remove this to elsewhere (this is test code for starting work on challenge repository)
-        repo = challrepo.get_global_repository()
-        repo.update_achievement("updated achievement from mathogen prac try_answer method")
-
         if (answer == self.currentProblem.answer):
             self._correct[self.currentProblem.operator] += 1
+            self.check_achievements(self.currentProblem.operator)
             return True
         else:
             self.__incorrect[self.currentProblem.operator] += 1
