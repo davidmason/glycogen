@@ -28,6 +28,12 @@ challenges = { "add_15": Challenge(BUNDLE_ID, "add_15",
                                    "Answer 15 division questions correctly during a session",
                                    Result(15, ge_success_func)) }
 
+operatorchallenge = { '+': "add_15",
+                      '-': "subtract_15",
+                      '*': "multiply_15",
+                      '/': "divide_15" }
+
+
 class MathogenPrac():
     """A mathogen practice game, which generates simple mathematics problems
     and keeps track of answers and progress towards a goal number of correct
@@ -47,9 +53,7 @@ class MathogenPrac():
         self.new_problem('+') #starts with a default addition problem
     
     def check_achievements(self, operator):
-        #see if any achievements are complete
-        #if self._correct[operator] >= 15:
-        challenge_id = challenges.keys()[self._correct.keys().index(operator)]
+        challenge_id = operatorchallenge[operator]
         repo = challrepo.get_global_repository()
         result = repo.get_result(BUNDLE_ID, challenge_id)
         if result.get_result() is not None:
