@@ -4,8 +4,7 @@ import sys, os
 import mathogen_tute
 from sugar.activity import activity
 from mathogen_tute_gui import MathogenTuteGui
-from glycogen.challenge import challrepo
-from glycogen.challenge.challrepo import Challenge
+from glycogen.challenge.challrepo import ChallengeRepo, Challenge
 
 
 
@@ -27,7 +26,6 @@ class MathogenTuteActivity(activity.Activity):
         self.layout = MathogenTuteGui()
         self.set_canvas(self.layout)
 
-        #TODO re-activate this when challenges are added
-        #repository = challrepo.get_global_repository()
-        #repository.update_challenges(mathogen_tute.BUNDLE_ID, mathogen_tute.challenges)
+        repository = ChallengeRepo()
+        repository.update_challenges(mathogen_tute.BUNDLE_ID, mathogen_tute.challenges)
 
