@@ -1,0 +1,10 @@
+[Activity]
+name = Mathogen Exams
+activity_version = 1
+license = GPLv2+ and BSD
+host_version = 1
+icon = activity-mathogen
+show_launcher = yes
+bundle_id = org.davidmason.mathogen_exam
+class = mathogen_exam_activity.MathogenExamActivity
+
