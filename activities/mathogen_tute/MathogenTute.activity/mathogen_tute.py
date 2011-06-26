@@ -31,22 +31,20 @@ class MathogenTute():
     """Encapsulates a set of tutorial pages that can be displayed."""
     
     def __init__(self):
-        self.tutorials = {"Addition Tutorial": self.build_addition_tutorial(),
-                           "Subtraction Tutorial": self.build_subtraction_tutorial(),
-                           "Multiplication Tutorial": self.build_multiplication_tutorial(),
-                           "Division Tutorial": self.build_division_tutorial()}
-        
-        pass
+        self.tutorials = {"Addition Tutorial": 2,
+                          "Subtraction Tutorial": 0,
+                          "Multiplication Tutorial": 0,
+                          "Division Tutorial": 0 }
     
     def get_tutorial_list(self):
         """Returns a list of available tutorials"""
         return self.tutorials.keys()
     
     def page_count(self, tutorial_name):
-        return len(self.tutorials[tutorial_name])
+        return self.tutorials[tutorial_name]
     
     def get_page(self, tutorial_name, page_number):
-        return self.tutorials[tutorial_name][page_number]
+        return self.build_page(tutorial_name, page_number)
     
     #def check_achievements(self, operator):
     #    challenge_id = operatorchallenge[operator]
@@ -65,40 +63,27 @@ class MathogenTute():
 
 #tutorial builders return lists of gtk widgets: an ordered set of pages
 
-    def build_addition_tutorial(self):
-        pages = []
-        for i in range(2):
-            pages.append(self.build_addition_page(i))
-        return pages
-    
-    def build_subtraction_tutorial(self):
-        return []
-    
-    def build_multiplication_tutorial(self):
-        return []
-    
-    def build_division_tutorial(self):
-        return []
-
-
-    def build_addition_page(self, page_no):
-        if page_no is 0:
-            #introduction page
-            page = gtk.VBox(False, 0)
-            para = "just testing this thing\nto make sure it works properly\nit does work. Have to do newlines manually.\n"
-            label = gtk.Label(para)  #TODO set label to wrap
-            label.show()
-            page.pack_start(label, True, True, 0)
-            page.show()
-            return page
-    
-        if page_no is 1:
-            page = gtk.Label("This is page 2")
-            page.show()
-            return page
-            
-        #TODO throw exception for trying to get out-of-range page
+    def build_page(self, tutorial, page_no):
+        if tutorial == "Addition Tutorial":
+            if page_no is 0:
+                #introduction page
+                page = gtk.VBox(False, 0)
+                para = "just testing this thing\nto make sure it works properly\nit does work. Have to do newlines manually.\n"
+                label = gtk.Label(para)  #TODO set label to wrap
+                label.show()
+                page.pack_start(label, True, True, 0)
+                page.show()
+                return page
         
+            if page_no is 1:
+                page = gtk.Label("This is page 2")
+                page.show()
+                return page
+        
+        #return error label if not a valid tutorial and page
+        page = gtk.Label("Page number or tutorial not valid")
+        page.show()
+        return page
         
         
     
