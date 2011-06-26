@@ -4,7 +4,7 @@ import gobject
 import random
 from time import sleep
 
-#TODO move this elsewhere
+#TODO build infrastructure to be able to handle challenges when bundle is first added
 from glycogen.challenge import challrepo
 from glycogen.challenge.challrepo import Challenge, Result
 
@@ -15,23 +15,23 @@ BUNDLE_ID = 'org.davidmason.mathogen_prac'
 
 
 
-challenges = { "add_15": Challenge(BUNDLE_ID, "add_15",
-                                   "Answer 15 addition questions correctly during a session",
-                                   Result(15, ge_success_func)),
-               "subtract_15": Challenge(BUNDLE_ID, "subtract_15",
-                                   "Answer 15 subtraction questions correctly during a session",
-                                   Result(15, ge_success_func)),
-               "multiply_15": Challenge(BUNDLE_ID, "multiply_15",
-                                   "Answer 15 multiplication questions correctly during a session",
-                                   Result(15, ge_success_func)),
-               "divide_15": Challenge(BUNDLE_ID, "divide_15",
-                                   "Answer 15 division questions correctly during a session",
-                                   Result(15, ge_success_func)) }
+challenges = { "add_16": Challenge(BUNDLE_ID, "add_16",
+                                   "Answer {target} addition questions correctly during a session",
+                                   Result(16, ge_success_func)),
+               "subtract_16": Challenge(BUNDLE_ID, "subtract_16",
+                                   "Answer {target} subtraction questions correctly during a session",
+                                   Result(16, ge_success_func)),
+               "multiply_16": Challenge(BUNDLE_ID, "multiply_16",
+                                   "Answer {target} multiplication questions correctly during a session",
+                                   Result(16, ge_success_func)),
+               "divide_16": Challenge(BUNDLE_ID, "divide_16",
+                                   "Answer {target} division questions correctly during a session",
+                                   Result(16, ge_success_func)) }
 
-operatorchallenge = { '+': "add_15",
-                      '-': "subtract_15",
-                      '*': "multiply_15",
-                      '/': "divide_15" }
+operatorchallenge = { '+': "add_16",
+                      '-': "subtract_16",
+                      '*': "multiply_16",
+                      '/': "divide_16" }
 
 
 class MathogenPrac():
@@ -41,7 +41,7 @@ class MathogenPrac():
 
     """
     
-    def __init__(self, howMany=15):
+    def __init__(self, howMany=20):
         # initialise the counts for correct and incorrect for each operator
         # let's store them in maps for fun, then we can reuse the methods
         # that look them up and compare ratios
