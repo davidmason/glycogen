@@ -1,0 +1,16 @@
+MATHOGEN PRACTICE
+=================
+
+A simple mathematics practice activity for sugar.
+The student solves mathematics problems that use the four
+basic operators (+, -, *, /) in order to move their avatar
+to the finish line of the race track.
+
+
+This activity is primarily to contribute to the development
+of glycogen's activity API, as well as to demonstrate the
+API and glycogen pathways.
+
+The activity can currently be installed in Sugar by copying
+the entire MathogenPrac.activity directory into ~/Activities/
+and restarting Sugar.
