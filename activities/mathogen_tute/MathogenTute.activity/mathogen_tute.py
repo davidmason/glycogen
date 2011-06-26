@@ -31,10 +31,10 @@ class MathogenTute():
     """Encapsulates a set of tutorial pages that can be displayed."""
     
     def __init__(self):
-        self.tutorials = {"Addition Tutorial": 2,
-                          "Subtraction Tutorial": 0,
-                          "Multiplication Tutorial": 0,
-                          "Division Tutorial": 0 }
+        self.tutorials = {"Addition Tutorial": 3,
+                          "Subtraction Tutorial": 3,
+                          "Multiplication Tutorial": 3,
+                          "Division Tutorial": 3 }
     
     def get_tutorial_list(self):
         """Returns a list of available tutorials"""
@@ -66,19 +66,73 @@ class MathogenTute():
     def build_page(self, tutorial, page_no):
         if tutorial == "Addition Tutorial":
             if page_no is 0:
-                #introduction page
                 page = gtk.VBox(False, 0)
-                para = "just testing this thing\nto make sure it works properly\nit does work. Have to do newlines manually.\n"
-                label = gtk.Label(para)  #TODO set label to wrap
+                para = "Addition tutorial intro page\nThese just have stub content for now."
+                label = gtk.Label(para)
                 label.show()
                 page.pack_start(label, True, True, 0)
                 page.show()
                 return page
         
             if page_no is 1:
-                page = gtk.Label("This is page 2")
+                page = gtk.Label("Addition tutorial first page")
                 page.show()
                 return page
+                
+            if page_no is 2:
+                page = gtk.Label("Addition tutorial last page")
+                page.show()
+                return page
+        
+        if tutorial == "Subtraction Tutorial":
+            if page_no is 0:
+                page = gtk.Label("Subtraction tutorial intro page")
+                page.show()
+                return page
+                
+            if page_no is 1:
+                page = gtk.Label("Subtraction tutorial first page")
+                page.show()
+                return page
+                
+            if page_no is 2:
+                page = gtk.Label("Subtraction tutorial last page")
+                page.show()
+                return page
+                
+        if tutorial == "Multiplication Tutorial":
+            if page_no is 0:
+                page = gtk.Label("Multiplication tutorial intro page")
+                page.show()
+                return page
+                
+            if page_no is 1:
+                page = gtk.Label("Multiplication tutorial first page")
+                page.show()
+                return page
+                
+            if page_no is 2:
+                page = gtk.Label("Multiplication tutorial last page")
+                page.show()
+                return page
+                
+        if tutorial == "Division Tutorial":
+            if page_no is 0:
+                page = gtk.Label("Division tutorial intro page")
+                page.show()
+                return page
+                
+            if page_no is 1:
+                page = gtk.Label("Division tutorial first page")
+                page.show()
+                return page
+                
+            if page_no is 2:
+                page = gtk.Label("Division tutorial last page")
+                page.show()
+                return page
+                
+        
         
         #return error label if not a valid tutorial and page
         page = gtk.Label("Page number or tutorial not valid")
