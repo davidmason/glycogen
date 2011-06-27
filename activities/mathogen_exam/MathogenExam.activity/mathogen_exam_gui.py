@@ -58,6 +58,8 @@ class MathogenExamGui(gtk.VBox):
         self.answer = gtk.Entry(3)
         self.button_go = gtk.Button("Submit answer")
         
+        #TODO go button/enter need to be hooked up to answer-checking function
+        
         self._problem_display.pack_start(self.label_num1, True, True, 0)
         self._problem_display.pack_start(self.label_operator, True, True, 0)
         self._problem_display.pack_start(self.label_num2, True, True, 0)
@@ -117,16 +119,36 @@ class MathogenExamGui(gtk.VBox):
     
     
     def _start_exam(self, exam):
-        #TODO get exam model to start exam
-        #TODO display current maths problem
-        #TODO go button/enter need to be hooked up to a checking function that keeps track of the score
+        if self._exams.start_exam(exam):
+            self._show_problem(self._exams.get_problem())
+            self._show_progress()
+        else:
+            #TODO show exam feedback saying there are no questions in the exam
+            pass
         
         self._menu.hide()
         self._exam_feedback.hide()
         self._problem_viewer.show()
         self._exam_box.show()    
     
+    def _show_problem(self, prob):
+        self.label_num1.set_text(str(prob.operand1))
+        self.label_num2.set_text(str(prob.operand2))
+        self.label_operator.set_text(prob.operator)
+        self.answer.set_text("")
+        self.answer.grab_focus()
+        self._problem_feedback.set_text("")
     
+    def _show_progress(self):
+        correct = self._exams.correct_count()
+        answers = self._exams.answer_count()
+        questions = self._exams.question_count()
+        
+        self._progress.set_text("Answered {0} of {1} questions. {2} correct".format(answers, questions, correct))
+        
+        fraction = float(answers) / float(questions)
+        self._progress.set_fraction(fraction)
+
     
 # weight can be something like pango.WEIGHT_BOLD 
 def _set_font_params(widget, scale=None, weight=None):
