@@ -120,7 +120,7 @@ class MathogenExam():
         correct = (answer == self._current_problem.answer)
         if correct:
             self.correct += 1
-        if self._next_problem() is None:
+        if not self._next_problem():
             self._exam_complete(self._current_exam, self.answers, self.correct)
         return correct
     
