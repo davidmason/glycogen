@@ -7,6 +7,9 @@ import gobject
 from mathogen_tute import MathogenTute
 
 
+_MENU_BUTTON_TEXT_SCALE = 4
+_PAGE_NUMBER_BUTTON_TEXT_SCALE = 3
+
 #_OPERATOR_BUTTON_TEXT_SCALE = 4
 #_HINTMESSAGE_TEXT_SCALE = 5
 #_PROGRESS_TEXT_SCALE = 5
@@ -15,15 +18,16 @@ from mathogen_tute import MathogenTute
 
 
 
-#def is_int(s):
-#    try:
-#        int(s)
-#        return True
-#    except ValueError:
-#        return False
-
-
-
+    
+# weight can be something like pango.WEIGHT_BOLD 
+def _set_font_params(widget, scale=None, weight=None):
+    context = widget.get_pango_context()
+    font = context.get_font_description()
+    if scale is not None:
+        font.set_size(int(font.get_size() * scale))
+    if weight is not None:
+        font.set_weight(weight)
+    widget.modify_font(font)
 
 
 
@@ -85,6 +89,7 @@ class MathogenTuteGui(gtk.VBox):
         menu = gtk.VBox(True, 20)
         for tutorial in tute.get_tutorial_list():
             btn = gtk.Button(tutorial)
+            _set_font_params(btn.get_child(), scale=_MENU_BUTTON_TEXT_SCALE)
             btn.show()
             btn.connect("clicked", self._menu_option_clicked_cb, tutorial)
             menu.pack_start(btn, True, True, 0)
@@ -106,6 +111,7 @@ class MathogenTuteGui(gtk.VBox):
         else:
             for page_number in range(0, page_count):
                 button = gtk.Button(str(page_number))
+                _set_font_params(button.get_child(), scale=_PAGE_NUMBER_BUTTON_TEXT_SCALE)
                 button.connect("clicked", self._btn_page_clicked_cb, page_number)
                 button.show()
                 self._page_buttons.pack_start(button, True, False, 0)
@@ -126,16 +132,7 @@ class MathogenTuteGui(gtk.VBox):
     
     
     
-    
-# weight can be something like pango.WEIGHT_BOLD 
-def _set_font_params(widget, scale=None, weight=None):
-    context = widget.get_pango_context()
-    font = context.get_font_description()
-    if scale is not None:
-        font.set_size(int(font.get_size() * scale))
-    if weight is not None:
-        font.set_weight(weight)
-    widget.modify_font(font)
+
     
     
 def close_window(self, widget, data=None):

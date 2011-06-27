@@ -23,6 +23,21 @@ challenges = { "add": Challenge(BUNDLE_ID, "add",
                                    Result(True, equals_success_func)) }
 
 
+
+_STANDARD_TEXT_SCALE = 3
+
+
+# weight can be something like pango.WEIGHT_BOLD 
+def _set_font_params(widget, scale=None, weight=None):
+    context = widget.get_pango_context()
+    font = context.get_font_description()
+    if scale is not None:
+        font.set_size(int(font.get_size() * scale))
+    if weight is not None:
+        font.set_weight(weight)
+    widget.modify_font(font)
+
+
 class MathogenTute():
     """Encapsulates a set of tutorial pages that can be displayed."""
     
@@ -48,6 +63,7 @@ class MathogenTute():
                 page = gtk.VBox(False, 0)
                 para = "Addition tutorial intro page\nThese just have stub content for now."
                 label = gtk.Label(para)
+                _set_font_params(label, scale=_STANDARD_TEXT_SCALE)
                 label.show()
                 page.pack_start(label, True, True, 0)
                 page.show()
@@ -55,11 +71,13 @@ class MathogenTute():
         
             if page_no is 1:
                 page = gtk.Label("Addition tutorial first page")
+                _set_font_params(page, scale=_STANDARD_TEXT_SCALE)
                 page.show()
                 return page
                 
             if page_no is 2:
                 page = gtk.Label("Addition tutorial last page")
+                _set_font_params(page, scale=_STANDARD_TEXT_SCALE)
                 page.show()
                 self.challenge_complete("add")
                 return page
@@ -67,16 +85,19 @@ class MathogenTute():
         if tutorial == "Subtraction Tutorial":
             if page_no is 0:
                 page = gtk.Label("Subtraction tutorial intro page")
+                _set_font_params(page, scale=_STANDARD_TEXT_SCALE)
                 page.show()
                 return page
                 
             if page_no is 1:
                 page = gtk.Label("Subtraction tutorial first page")
+                _set_font_params(page, scale=_STANDARD_TEXT_SCALE)
                 page.show()
                 return page
                 
             if page_no is 2:
                 page = gtk.Label("Subtraction tutorial last page")
+                _set_font_params(page, scale=_STANDARD_TEXT_SCALE)
                 page.show()
                 self.challenge_complete("subtract")
                 return page
@@ -84,16 +105,19 @@ class MathogenTute():
         if tutorial == "Multiplication Tutorial":
             if page_no is 0:
                 page = gtk.Label("Multiplication tutorial intro page")
+                _set_font_params(page, scale=_STANDARD_TEXT_SCALE)
                 page.show()
                 return page
                 
             if page_no is 1:
                 page = gtk.Label("Multiplication tutorial first page")
+                _set_font_params(page, scale=_STANDARD_TEXT_SCALE)
                 page.show()
                 return page
                 
             if page_no is 2:
                 page = gtk.Label("Multiplication tutorial last page")
+                _set_font_params(page, scale=_STANDARD_TEXT_SCALE)
                 page.show()
                 self.challenge_complete("multiply")
                 return page
@@ -101,16 +125,19 @@ class MathogenTute():
         if tutorial == "Division Tutorial":
             if page_no is 0:
                 page = gtk.Label("Division tutorial intro page")
+                _set_font_params(page, scale=_STANDARD_TEXT_SCALE)
                 page.show()
                 return page
                 
             if page_no is 1:
                 page = gtk.Label("Division tutorial first page")
+                _set_font_params(page, scale=_STANDARD_TEXT_SCALE)
                 page.show()
                 return page
                 
             if page_no is 2:
                 page = gtk.Label("Division tutorial last page")
+                _set_font_params(page, scale=_STANDARD_TEXT_SCALE)
                 page.show()
                 self.challenge_complete("divide")
                 return page
@@ -119,6 +146,7 @@ class MathogenTute():
         
         #return error label if not a valid tutorial and page
         page = gtk.Label("Page number or tutorial not valid")
+        _set_font_params(page, scale=_STANDARD_TEXT_SCALE)
         page.show()
         return page
         
