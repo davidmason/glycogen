@@ -21,6 +21,7 @@ EXTENSION_DIR=/usr/share/sugar/extensions
 # generate directories for activities
 MATH_PRAC_DIR="${ACTIVITY_DIR}/MathogenPrac.activity"
 MATH_TUTE_DIR="${ACTIVITY_DIR}/MathogenTute.activity"
+MATH_EXAM_DIR="${ACTIVITY_DIR}/MathogenExam.activity"
 
 # glycogen library and extension directories
 LIB_DIR="${LIBRARY_DIR}/python2.7/site-packages/glycogen"
@@ -32,6 +33,7 @@ HERE=`pwd`
 ACTIVITY_FROM="${HERE}/activities"
 MATH_PRAC_FROM="${ACTIVITY_FROM}/mathogen_prac/MathogenPrac.activity"
 MATH_TUTE_FROM="${ACTIVITY_FROM}/mathogen_tute/MathogenTute.activity"
+MATH_EXAM_FROM="${ACTIVITY_FROM}/mathogen_exam/MathogenExam.activity"
 LIB_FROM="${HERE}/site-packages/glycogen"
 EXT_FROM="${HERE}/extensions/cpsection/glycogen"
 
@@ -41,12 +43,13 @@ DO_LIB=false
 DO_EXT=false
 DO_MATH_PRAC=false
 DO_MATH_TUTE=false
+DO_MATH_EXAM=false
             
 # parse command line options
 #TODO there is something wrong with these - they sort of work,
 # but often the backup is not done, and there are complaints sometimes
 # about missing an argument
-while getopts blept: OPT; do
+while getopts bleptx: OPT; do
     case "$OPT" in
         b)
             DO_BACKUP=true
@@ -62,6 +65,9 @@ while getopts blept: OPT; do
             ;;
         t)
             DO_MATH_TUTE=true
+            ;;
+        x)
+            DO_MATH_EXAM=true
             ;;
         \?)
             # invalid parameter passed
@@ -108,6 +114,10 @@ fi
 
 if $DO_MATH_TUTE ; then
     deploy $MATH_TUTE_FROM $MATH_TUTE_DIR
+fi
+
+if $DO_MATH_EXAM ; then
+    deploy $MATH_EXAM_FROM $MATH_EXAM_DIR
 fi
 
 if $DO_LIB ; then

@@ -4,12 +4,12 @@ import sys, os
 import mathogen_exam
 from sugar.activity import activity
 from mathogen_exam_gui import MathogenExamGui
-from glycogen.challenge.challrepo import ChallengeRepo, Challenge
+from glycogen.challenge.challrepo import ChallengeRepo
 
 
 
 class MathogenExamActivity(activity.Activity):
-    """This class is used to load mathogen tute as a sugar activity.
+    """This class is used to load mathogen exam as a sugar activity.
     
     """
     
@@ -25,7 +25,8 @@ class MathogenExamActivity(activity.Activity):
         # Create the main mathogen tutorial window
         self.layout = MathogenExamGui()
         self.set_canvas(self.layout)
-
-        repository = ChallengeRepo()
-        repository.update_challenges(mathogen_exam.BUNDLE_ID, mathogen_exam.challenges)
+        
+        #TODO re-enable when challenges defined
+#        repository = ChallengeRepo()
+#        repository.update_challenges(mathogen_exam.BUNDLE_ID, mathogen_exam.challenges)
 

@@ -39,53 +39,77 @@ class MathogenExamGui(gtk.VBox):
         self._menu.show()
         self.pack_start(self._menu, True, True, 0)
         
-        self._viewer = gtk.VBox(False, 0)
-        #viewer stays hidden until an option is selected
-        self.pack_start(self._viewer, True, True, 0)
+        self._exam_box = gtk.VBox(False, 0)
+        self.pack_start(self._exam_box, True, True, 0)
+        #hidden until an exam is started
         
-        self._page_window = gtk.ScrolledWindow()
-        self._page_window.set_size_request(1000, 500)
-        self._page_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        self._page_window.show()
-        self._viewer.pack_start(self._page_window, True, True, 0)
+        self._problem_viewer = gtk.VBox(True, 0)
+        self._problem_viewer.show()
+        self._exam_box.pack_start(self._problem_viewer, True, True, 0)
         
-        self._control_strip = gtk.HBox(True, 5)
-        self._control_strip.show()
-        self._viewer.pack_end(self._control_strip, False, False, 0)
+        self._problem_display = gtk.HBox(True, 0)
+        self._problem_display.show()
+        self._problem_viewer.pack_start(self._problem_display, True, True, 0)
+        
+        self.label_num1 = gtk.Label("0")
+        self.label_operator = gtk.Label("%")
+        self.label_num2 = gtk.Label("0")
+        self.label_equals = gtk.Label("=")
+        self.answer = gtk.Entry(3)
+        self.button_go = gtk.Button("Submit answer")
+        
+        self._problem_display.pack_start(self.label_num1, True, True, 0)
+        self._problem_display.pack_start(self.label_operator, True, True, 0)
+        self._problem_display.pack_start(self.label_num2, True, True, 0)
+        self._problem_display.pack_start(self.label_equals, True, True, 0)
+        self._problem_display.pack_start(self.answer, True, True, 0)
+        self._problem_display.pack_start(self.button_go, True, True, 0)
+        
+        self.label_num1.show()
+        self.label_operator.show()
+        self.label_num2.show()
+        self.label_equals.show()
+        self.answer.show()
+        self.button_go.show()
+        
+        self._problem_feedback = gtk.Label("")
+        self._problem_feedback.show()
+        self._problem_viewer.pack_start(self._problem_feedback, True, True, 0)
+        
+        self._exam_feedback = gtk.Label("No exam completed")
+        #hidden until user completes an exam
+        self._exam_box.pack_start(self._exam_feedback, True, True, 0)
+        
+        self._progress_strip = gtk.HBox(False, 0)
+        self._progress_strip.show()
+        self._exam_box.pack_end(self._progress_strip, False, False, 0)
         
         self._btn_menu = gtk.Button("Menu")
-        self._btn_menu.connect('clicked', self._btn_menu_clicked_cb)
+        self._btn_menu.connect("clicked", self._btn_menu_clicked_cb)
         self._btn_menu.show()
-        self._control_strip.pack_start(self._btn_menu, True, False, 0)
+        self._progress_strip.pack_start(self._btn_menu, False, False, 0)
         
-        #self._page_buttons = gtk.HBox(True, 5)
-        #self._page_buttons.show()
-        #page buttons will be added to this
-        #self._control_strip.pack_start(self._page_buttons, True, True, 0)
-        #TODO progress indicator here instead
-        
-        
-        #TODO use mathogen_prac gui code for this. Remove hint.
+        self._progress = gtk.ProgressBar()
+        self._progress.set_text("Not doing an exam")
+        self._progress.set_fraction(0.0)
+        self._progress.show()
+        self._progress_strip.pack_end(self._progress, True, True, 0)
         
         self.show()
         
         
     
     def _btn_menu_clicked_cb(self, widget, data=None):
-        self._viewer.hide()
+        self._exam_box.hide()
         self._menu.show()
     
     def _menu_option_clicked_cb(self, widget, data):
         self._start_exam(data)
     
-    def _btn_page_clicked_cb(self, widget, data):
-        page_number = data
-        self._show_page(self._tutorial, page_number)
-    
     def _build_menu(self, exams):
         menu = gtk.VBox(True, 20)
         for exam in exams.get_exam_list():
-            btn = gtk.Button(exams.get_label[exam])
+            btn = gtk.Button(exams.get_label(exam))
             btn.show()
             btn.connect("clicked", self._menu_option_clicked_cb, exam)
             menu.pack_start(btn, True, True, 0)
@@ -98,18 +122,9 @@ class MathogenExamGui(gtk.VBox):
         #TODO go button/enter need to be hooked up to a checking function that keeps track of the score
         
         self._menu.hide()
-        self._viewer.show()
-    
-    def _show_page(self, tutorial, page):
-        """ Displays the indicated page in the viewing area """
-        if len(self._page_window.get_children()) > 0:
-            self._page_window.remove(self._page_window.get_children()[0])
-        if len(self._page_window.get_children()) > 0:
-            self._page_window.remove(self._page_window.get_children()[0])  #trying to overcome a bug
-        self._page_window.add_with_viewport(self._tute.get_page(tutorial, page))
-    
-    
-    
+        self._exam_feedback.hide()
+        self._problem_viewer.show()
+        self._exam_box.show()    
     
     
     
