@@ -4,28 +4,33 @@ import gobject
 import random
 
 from glycogen.challenge.challrepo import ChallengeRepo, Challenge, Result
-from glycogen.challenge.result import ge_success_func
+from glycogen.challenge.result import ge_success_func, equals_success_func
 
 
 BUNDLE_ID = 'org.davidmason.mathogen_exam'
 
-#TODO change to exam challenges
-#challenges = { "add": Challenge(BUNDLE_ID, "add",
-#                                   "Read to the last page of the Addition Tutorial",
-#                                   Result(True, equals_success_func)),
-#               "subtract": Challenge(BUNDLE_ID, "subtract",
-#                                   "Read to the last page of the Subtraction Tutorial",
-#                                   Result(True, equals_success_func)),
-#               "multiply": Challenge(BUNDLE_ID, "multiply",
-#                                   "Read to the last page of the Multiplication Tutorial",
-#                                   Result(True, equals_success_func)),
-#               "divide": Challenge(BUNDLE_ID, "divide",
-#                                   "Read to the last page of the Division Tutorial",
-#                                   Result(True, equals_success_func)) }
+
+try_exam_chal = "try any exam"
+easy_chal = "pass easy exam"
+intm_chal = "pass intermediate exam"
+adv_chal = "pass advanced exam"
+
+challenges = { easy_chal : Challenge(BUNDLE_ID, easy_chal,
+                                     "Score {target}% or higher on the easy maths exam",
+                                     Result(50, ge_success_func)),
+               intm_chal : Challenge(BUNDLE_ID, intm_chal,
+                                     "Score {target}% or higher on the intermediate maths exam",
+                                     Result(50, ge_success_func)),
+               adv_chal : Challenge(BUNDLE_ID, adv_chal,
+                                    "Score {target}% or higher on the advanced maths exam",
+                                    Result(50, ge_success_func)),
+               try_exam_chal : Challenge(BUNDLE_ID, try_exam_chal,
+                                         "Attempt a maths exam",
+                                         Result(True, equals_success_func)) }
 
 
 class MathogenExam():
-    """Encapsulates a set of tutorial pages that can be displayed."""
+    """Encapsulates a set of maths exams."""
     
     def __init__(self):
         # value tuples are: exam label,
@@ -59,6 +64,7 @@ class MathogenExam():
                  False if there are no problems available (empty exam)
         """
         
+        self._current_exam = exam_id
         self.answers = 0
         self.correct = 0
         self.questions = self.exams[exam_id][1]
@@ -114,17 +120,37 @@ class MathogenExam():
         correct = (answer == self._current_problem.answer)
         if correct:
             self.correct += 1
-        self._next_problem()
+        if self._next_problem() is None:
+            self._exam_complete(self._current_exam, self.answers, self.correct)
         return correct
-            
-            
     
-#    def challenge_complete(self, challenge_name):
-#        repo = ChallengeRepo()
-#        result = repo.get_result(BUNDLE_ID, challenge_name)
-#        result.set_result(True)
-#        repo.set_result(BUNDLE_ID, challenge_name, result)
+    def _exam_complete(self, exam_id, answered, correct):
+        """Updates challenge results with completed exam grade"""
         
+        repo = ChallengeRepo()
+        
+        #'try any exam' challenge is complete
+        result = repo.get_result(BUNDLE_ID, try_exam_chal)
+        result.set_result(True)
+        repo.set_result(BUNDLE_ID, try_exam_chal, result)
+        
+        
+        percent_correct = 100 * correct / answered
+        
+        if exam_id == "easy":
+            challenge_id = easy_chal
+        elif exam_id == "intermediate":
+            challenge_id = intm_chal
+        elif exam_id == "advanced":
+            challenge_id = adv_chal
+
+        result = repo.get_result(BUNDLE_ID, challenge_id)
+        if result.get_result() is None:
+            result.set_result(percent_correct)
+            repo.set_result(BUNDLE_ID, challenge_id, result)
+        elif percent_correct > result.get_result():
+                result.set_result(percent_correct)
+                repo.set_result(BUNDLE_ID, challenge_id, result)
         
 class SimpleMathProblem():
     """Represents an addition/subtraction/multiplication/division problem.

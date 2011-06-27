@@ -26,7 +26,6 @@ class MathogenExamActivity(activity.Activity):
         self.layout = MathogenExamGui()
         self.set_canvas(self.layout)
         
-        #TODO re-enable when challenges defined
-#        repository = ChallengeRepo()
-#        repository.update_challenges(mathogen_exam.BUNDLE_ID, mathogen_exam.challenges)
+        repository = ChallengeRepo()
+        repository.update_challenges(mathogen_exam.BUNDLE_ID, mathogen_exam.challenges)
 
