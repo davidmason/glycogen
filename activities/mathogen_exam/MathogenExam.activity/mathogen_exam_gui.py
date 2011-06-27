@@ -7,11 +7,24 @@ import gobject
 from mathogen_exam import MathogenExam
 
 
-#_OPERATOR_BUTTON_TEXT_SCALE = 4
-#_HINTMESSAGE_TEXT_SCALE = 5
-#_PROGRESS_TEXT_SCALE = 5
-#_CHALLENGE_TEXT_SCALE = 7
-#_CHALLENGE_BUTTON_TEXT_SCALE = 5
+_MENU_BUTTON_TEXT_SCALE = 4
+_MESSAGE_TEXT_SCALE = 3
+_PROGRESS_TEXT_SCALE = 3
+_CHALLENGE_TEXT_SCALE = 6
+_CHALLENGE_BUTTON_TEXT_SCALE = 3
+
+
+# weight can be something like pango.WEIGHT_BOLD 
+def _set_font_params(widget, scale=None, weight=None):
+    context = widget.get_pango_context()
+    font = context.get_font_description()
+    if scale is not None:
+        font.set_size(int(font.get_size() * scale))
+    if weight is not None:
+        font.set_weight(weight)
+    widget.modify_font(font)
+
+
 
 
 _NEW_QUESTION_DELAY = 900  # milliseconds
@@ -50,10 +63,18 @@ class MathogenExamGui(gtk.VBox):
         self.label_num2 = gtk.Label("0")
         self.label_equals = gtk.Label("=")
         self.answer = gtk.Entry(3)
-        self.button_go = gtk.Button("Submit answer")
+        self.button_go = gtk.Button("Submit\nanswer")
         
         self.answer.connect("activate", self._check_answer_cb)
         self.button_go.connect("clicked", self._check_answer_cb)
+        
+        _set_font_params(self.label_num1, scale=_CHALLENGE_TEXT_SCALE)
+        _set_font_params(self.label_operator, scale=_CHALLENGE_TEXT_SCALE)
+        _set_font_params(self.label_num2, scale=_CHALLENGE_TEXT_SCALE)
+        _set_font_params(self.label_equals, scale=_CHALLENGE_TEXT_SCALE)
+        _set_font_params(self.answer, scale=_CHALLENGE_TEXT_SCALE)
+        _set_font_params(self.button_go.get_child(), scale=_CHALLENGE_BUTTON_TEXT_SCALE)
+        
         
         self._problem_display.pack_start(self.label_num1, True, True, 0)
         self._problem_display.pack_start(self.label_operator, True, True, 0)
@@ -70,10 +91,12 @@ class MathogenExamGui(gtk.VBox):
         self.button_go.show()
         
         self._problem_feedback = gtk.Label("")
+        _set_font_params(self._problem_feedback, scale=_MESSAGE_TEXT_SCALE)
         self._problem_feedback.show()
         self._problem_viewer.pack_start(self._problem_feedback, True, True, 0)
         
         self._exam_feedback = gtk.Label("No exam completed")
+        _set_font_params(self._exam_feedback, scale=_MESSAGE_TEXT_SCALE)
         #hidden until user completes an exam
         self._exam_box.pack_start(self._exam_feedback, True, True, 0)
         
@@ -87,6 +110,7 @@ class MathogenExamGui(gtk.VBox):
         self._progress_strip.pack_start(self._btn_menu, False, False, 0)
         
         self._progress = gtk.ProgressBar()
+        _set_font_params(self._progress, scale=_PROGRESS_TEXT_SCALE)
         self._progress.set_text("Not doing an exam")
         self._progress.set_fraction(0.0)
         self._progress.show()
@@ -127,7 +151,6 @@ class MathogenExamGui(gtk.VBox):
             raw_feedback = "Exam complete! Well done.\n\nAnswered {0} of {1} questions correctly.\n\nYour grade is {2}%"
             feedback = raw_feedback.format(correct, questions, grade)
             self._show_exam_feedback(feedback)
-            #TODO update challenge results - not here, do it in mathogen_exam
         return False  # return false so that it stops the timeout and runs only once
     
     def _show_exam_feedback(self, feedback):
@@ -146,6 +169,7 @@ class MathogenExamGui(gtk.VBox):
         menu = gtk.VBox(True, 20)
         for exam in exams.get_exam_list():
             btn = gtk.Button(exams.get_label(exam))
+            _set_font_params(btn.get_child(), scale=_MENU_BUTTON_TEXT_SCALE)
             btn.show()
             btn.connect("clicked", self._menu_option_clicked_cb, exam)
             menu.pack_start(btn, True, True, 0)
@@ -185,15 +209,7 @@ class MathogenExamGui(gtk.VBox):
         self._progress.set_fraction(fraction)
 
     
-# weight can be something like pango.WEIGHT_BOLD 
-def _set_font_params(widget, scale=None, weight=None):
-    context = widget.get_pango_context()
-    font = context.get_font_description()
-    if scale is not None:
-        font.set_size(int(font.get_size() * scale))
-    if weight is not None:
-        font.set_weight(weight)
-    widget.modify_font(font)
+
     
     
 def close_window(self, widget, data=None):
