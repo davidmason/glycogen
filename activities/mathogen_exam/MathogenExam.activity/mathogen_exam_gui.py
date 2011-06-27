@@ -14,13 +14,7 @@ from mathogen_exam import MathogenExam
 #_CHALLENGE_BUTTON_TEXT_SCALE = 5
 
 
-
-#def is_int(s):
-#    try:
-#        int(s)
-#        return True
-#    except ValueError:
-#        return False
+_NEW_QUESTION_DELAY = 900  # milliseconds
 
 
 
@@ -58,7 +52,8 @@ class MathogenExamGui(gtk.VBox):
         self.answer = gtk.Entry(3)
         self.button_go = gtk.Button("Submit answer")
         
-        #TODO go button/enter need to be hooked up to answer-checking function
+        self.answer.connect("activate", self._check_answer_cb)
+        self.button_go.connect("clicked", self._check_answer_cb)
         
         self._problem_display.pack_start(self.label_num1, True, True, 0)
         self._problem_display.pack_start(self.label_operator, True, True, 0)
@@ -99,7 +94,46 @@ class MathogenExamGui(gtk.VBox):
         
         self.show()
         
+    def _check_answer_cb(self, widget, data=None):
+        user_input = self.answer.get_text()
         
+        if not user_input:
+            self._problem_feedback.set_text("You didn't enter an answer yet")
+            return
+        try:
+            input_num = int(user_input)
+        except ValueError:
+            self._problem_feedback.set_text("Your input doesn't look like a number")
+            return
+        
+        if self._exams.try_answer(input_num):
+            self._problem_feedback.set_text("Correct")
+        else:
+            self._problem_feedback.set_text("Incorrect")
+        
+        self._show_progress()
+        self.answer.set_sensitive(False)
+        gobject.timeout_add(_NEW_QUESTION_DELAY, self._next_problem_cb)
+    
+    
+    def _next_problem_cb(self):
+        problem = self._exams.get_problem()
+        if problem is not None:
+            self._show_problem(problem)
+        else:  #no problems left, exam finished
+            correct = self._exams.correct_count()
+            questions = self._exams.question_count()
+            grade = 100 * correct / questions
+            raw_feedback = "Exam complete! Well done.\n\nAnswered {0} of {1} questions correctly.\n\nYour grade is {2}%"
+            feedback = raw_feedback.format(correct, questions, grade)
+            self._show_exam_feedback(feedback)
+            #TODO update challenge results - not here, do it in mathogen_exam
+        return False  # return false so that it stops the timeout and runs only once
+    
+    def _show_exam_feedback(self, feedback):
+        self._problem_viewer.hide()
+        self._exam_feedback.set_text(feedback)
+        self._exam_feedback.show()
     
     def _btn_menu_clicked_cb(self, widget, data=None):
         self._exam_box.hide()
@@ -123,7 +157,7 @@ class MathogenExamGui(gtk.VBox):
             self._show_problem(self._exams.get_problem())
             self._show_progress()
         else:
-            #TODO show exam feedback saying there are no questions in the exam
+            self._show_exam_feedback("Error: this exam doesn't have any questions in it!\n\nTry a different one.")
             pass
         
         self._menu.hide()
@@ -136,6 +170,7 @@ class MathogenExamGui(gtk.VBox):
         self.label_num2.set_text(str(prob.operand2))
         self.label_operator.set_text(prob.operator)
         self.answer.set_text("")
+        self.answer.set_sensitive(True)
         self.answer.grab_focus()
         self._problem_feedback.set_text("")
     
