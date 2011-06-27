@@ -1,16 +1,15 @@
-MATHOGEN PRACTICE
+MATHOGEN TUTORIAL
 =================
 
-A simple mathematics practice activity for sugar.
-The student solves mathematics problems that use the four
-basic operators (+, -, *, /) in order to move their avatar
-to the finish line of the race track.
-
+A simple mathematics tutorial activity for sugar.
+Tutorials are only stubs at the moment, but the framework for
+displaying tutorials and keeping track of which have been viewed
+is functional.
 
 This activity is primarily to contribute to the development
-of glycogen's activity API, as well as to demonstrate the
+of glycogen's challenge API, as well as to demonstrate the
 API and glycogen pathways.
 
 The activity can currently be installed in Sugar by copying
-the entire MathogenPrac.activity directory into ~/Activities/
+the entire MathogenTute.activity directory into ~/Activities/
 and restarting Sugar.
